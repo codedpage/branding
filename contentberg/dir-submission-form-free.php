@@ -7,7 +7,11 @@
  */
 
 function form_free() {
-	if (isset($_POST['doc_name'])) { 
+    dlogs($_POST);
+        global $wpdb;
+        $states_list  =  $wpdb->get_results("SELECT * FROM {$wpdb->prefix}state where status = 1",OBJECT);
+
+	if (isset($_POST['doc_name'])) { dlogs("--1");
             $doc_name	=   sanitize_text_field( $_POST['doc_name'] );
             $phone      =   sanitize_text_field( $_POST['phone'] );
             $add1	=   sanitize_text_field( $_POST['add1'] );
@@ -30,16 +34,19 @@ function form_free() {
 	
             if ( empty( $doc_name ) || empty( $phone ) || empty( $add1) || empty( $city ) || empty( $state ) || empty( $zip ) || empty($l_name) || empty($f_name) || empty($email) ) {
                     $reg_errors->add('field', 'Required form field is missing');
+                    dlogs("required");
             }
 		
 	}
+    dlogs("--2");
+    die();
 ?>
-<form class="my-frm" method="post" action="<?php echo get_home_url();?>/directory-subscription/?type=free">
+<form class="my-frm" method="post" id="payment-form" action="<?php echo get_home_url();?>/directory-subscription/?type=basic">
 <div class="container-my">
 	<div class="package-frm">
 	<div class="row-my">
 	<div class="col-12-my m-10">
-		<h3 class="frm-top-hding" style="margin-top:20px;">Add a Free Listing</h3><hr class="divider-line">
+		<h3 class="frm-top-hding" style="margin-top:20px;">Add a Basic Listing</h3><hr class="divider-line">
 		<?php
                 if (isset($_POST['doc_name'])) {
                     if ( is_wp_error( $reg_errors ) ) {
@@ -51,72 +58,293 @@ function form_free() {
                         }
                     }
                     if(count($reg_errors->errors) == 0) {
-                        //write code to save info of form into DB
-                        global $wpdb;
-                        $table_name ='wp_dir_subscription';
-                        $success = $wpdb->insert($table_name, array(
-                            'treat_center' => $doc_name,
-                            'add1' => $add1,
-                            'add2' => $add2,
-                            'city' => $city,
-                            'state' => $state,
-                            'zip'   => $zip,
-                            'phone' => $phone,
-                            'c_f_name' => $f_name,
-                            'c_l_name' => $l_name,
-                            'c_email'  => $email,
-                            'c_phone'  => $c_phone,
-                            'listing_type'  => 'free',
-                       ));
-                        if($success) {
-                            /* code for hubsport to send email */
-                            $ip_addr         = $_SERVER['REMOTE_ADDR']; //IP address too.
-                            $hs_context      = array(
-                                    'ipAddress' => $ip_addr,
-                                    'pageUrl' => 'https://www.intherooms.com/home/directory-subscription/',
-                                    'pageName' => 'Listing Subscription Free'
-                            );
-                            $hs_context_json = json_encode($hs_context);
+                        $thanks_html = '
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Contributor Contact Details</h3>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>First Name:&nbsp;&nbsp;<b>'.$f_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Last Name:&nbsp;&nbsp;<b>'.$l_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Email:&nbsp;&nbsp;<b>'.$email.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Phone:&nbsp;&nbsp;<b>'.$c_phone.'</b></p>
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Listing Information</h3>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Treatment Center or Doctor Name:&nbsp;&nbsp;<b>'.$doc_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Phone Number:&nbsp;&nbsp;<b>'.$phone.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Address Line 1:&nbsp;&nbsp;<b>'.$add1.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Address Line 2:&nbsp;&nbsp;<b>'.$add2.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>City:&nbsp;&nbsp;<b>'.$city.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>State:&nbsp;&nbsp;<b>'.$state.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Zip Code:&nbsp;&nbsp;<b>'.$zip.'</b></p>
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Order Summary</h3>
+                                        <p><b>Basic Listing Monthly Subscription</b><br>$5.00 today, then $5.00/month<br>Your subscription will continue until cancelled.<br><br>Total: $5.00</p>
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Payment Details</h3>
+                                        <div id="payment_process"></div>
+                                    </div>
+                                    <div id="full_payment_area" class="row-my" style="margin-left: 15px;">
+                                        <div class="col-12-my">
+                                            <div class="form-row">
+                                                <div class="form-group col-6-my">
+                                                    <label for="firstname">Name on Card</label>
+                                                    <input class="form-control"  style="color: #32325d;border: none;border-bottom: 1px solid #ccc;padding-left: 0;" type="text" name="fname" id="card-name" data-tid="elements_examples.form.name_placeholder" placeholder="Jane Doe" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12-my">&nbsp;</div>
+                                        <div class="col-12-my">
+                                            <div class="form-row">
+                                                <div class="form-group col-6-my">
+                                                    <label for="" id="card-element"></label><!-- A Stripe Element will be inserted here. -->
+                                                    <label for="" id="card-errors" role="alert"></label><!-- Used to display form errors. -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12-my">&nbsp;</div>
+                                        <div class="col-12-my">
+                                            <div class="form-row">
+                                                <div class="form-group col-6-my">
+                                                    <label for="">Amount : $5.00</label>
+                                                </div>
+                                                <div class="form-group col-6-my">
+                                                    <button id="payment-button" class="btn btn-info">Submit Payment</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>	
+                                    </div><!-- full_payment_area end here -->
+                                    
+                                    <!-- Stripe payment area start here -->
+                                    <script src="https://js.stripe.com/v3/"></script>
+                                    <script type="text/javascript"> 
+                                    /* Create a Stripe client */
+                                    var stripe = Stripe("pk_test_51Mne95HZuGuJ7noYJTCb7yST7LWfN5H362x6ObC8SiZT2indjq5P5pG51AG1gQKRVuPDAEQVaXLIlkfbZ3PKCAwN00ahy44O5g");
+                                    //var stripe = Stripe("pk_test_HoUb9XZhaQbCuUJGPNyHyjKx");
+                                    /* Custom styling can be passed to options when creating an Element */
+                                    /* (Note that this demo uses a wider set of styles than the guide below.) */
+					var style = {
+						base: {
+							color: "#32325d",
+							lineHeight: "18px",
+							fontSmoothing: "antialiased",
+							fontSize: "16px",
+							"::placeholder": {
+								color: "#aab7c4"
+							}
+						},
+					invalid: {
+						color: "#fa755a",
+						iconColor: "#fa755a"
+					}
+					};
 
-                            $str_post = "email=" .urlencode($email)
-                                    . "&firstname=" . urlencode($f_name)
-                                    . "&lastname=" . urlencode($l_name)
-                                    . "&zip_code=" . urlencode($zip)
-                                    . "&phone=" . urlencode($phone)
-                                    . "&treatment_center_or_doctor_name=" . urlencode($doc_name)
-                                    . "&hs_context=" . urlencode($hs_context_json); //Leave this one be
-                            $endpoint = 'https://forms.hubspot.com/uploads/form/v2/573688/ebb99a76-f4be-4fa6-b023-8bd6a9b14162';
+                                    /* Create an instance of Elements */
+					var elements = stripe.elements();
+				
+                                    /* Create an instance of the card Element. */
+					var card = elements.create("card", {style: style});
+				
+                                    /* Add an instance of the card Element into the `card-element` <div>. */
+					card.mount("#card-element");
+					
+                                    /* Handle real-time validation errors from the card Element. */
+					card.addEventListener("change", function(event) {
+                                            var displayError = document.getElementById("card-errors");
+                                            if (event.error) {
+                                                    displayError.textContent = event.error.message;
+                                                    paymentButton.disabled = false;
+                                            } else {
+                                                    displayError.textContent = "";
+                                            }
+                                        });
 
-                            $ch = @curl_init();
-                            @curl_setopt($ch, CURLOPT_POST, true);
-                            @curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-                            @curl_setopt($ch, CURLOPT_URL, $endpoint);
-                            @curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                                    'Content-Type: application/x-www-form-urlencoded'
-                            ));
-                            @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            $response    = @curl_exec($ch); //Log the response from HubSpot as needed.
-                            $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE); //Log the response status code
-                            //print curl_error($ch);
-                            @curl_close($ch);
-                            /* Hubspot code end here */
-                            $thanks_html = '
-                                    <div>
-                                        <p>Thank you!<br>You request for your listing to be added to our directory has been received.<br>Check your email for a message about the next steps.<br>Your listing will be reviewed within the next two business days.  Once this review process has been completed you will receive an email confirming that your listings are live and where you can see them.<br>If you have any questions please email us at contact@intherooms.com</p>
-                                    </div></div></div></div></div></form>';
+                                    var ownerInfo = {
+                                        owner: {
+                                            name: "'.$f_name." ".$l_name.'",
+                                            address: {
+                                              line1: "'.$add1.$add2.'",
+                                              city: "'.$city.'",
+                                              postal_code: "'.$zip.'",
+                                              country: "US",
+                                            },
+                                            email: "'.$email.'"
+                                        },
+                                    };
+			
+                                /* Handle form submission. */
+				var form = document.getElementById("payment-form");
+				var paymentButton = document.getElementById("payment-button");
+				
+				form.addEventListener("submit", function(event) { 
+                                    event.preventDefault();
+                                    paymentButton.disabled = true;
+                                    stripe.createSource(card, ownerInfo).then(function(result) {
+					if (result.error) {
+                                            /* Inform the user if there was an error */
+                                            var errorElement = document.getElementById("card-errors");
+                                            errorElement.textContent = result.error.message;
+                                            paymentButton.disabled = false;
+					} else {
+                                            /* Send the source to your server */
+                                            stripeSourceHandler(result.source);
+                                        }
+                                    });
+                                });
+				
+                                function stripeSourceHandler(source) {
+                                    /* Insert the source ID into the form so it gets submitted to the server */
+                                    var form = document.getElementById("payment-form");
+                                    var hiddenInput = document.createElement("input");
+                                    hiddenInput.setAttribute("type", "hidden");
+                                    hiddenInput.setAttribute("name", "stripeSource");
+                                    hiddenInput.setAttribute("value", source.id);
+                                    form.appendChild(hiddenInput);
+                                    jQuery.ajax({
+                                        type : "POST",
+                                        dataType : "json",
+                                        url : "'.admin_url( 'admin-ajax.php' ).'",
+                                        data : {
+                                           card_name: jQuery("#card_name").val(),
+                                           card_no: jQuery("#card_no").val(),
+                                           exp_date: jQuery("#exp_date").val(),
+                                           cvv: jQuery("#cvv").val(),
+                                           f_name: "'.$f_name.'",
+                                           l_name: "'.$l_name.'",
+                                           email: "'.$email.'",
+                                           c_phone: "'.$c_phone.'",
+                                           doc_name: "'.$doc_name.'",
+                                           add1: "'.$add1.'",
+                                           add2: "'.$add2.'",
+                                           city: "'.$city.'",
+                                           state: "'.$state.'",
+                                           zip: "'.$zip.'",
+                                           phone: "'.$phone.'",
+                                           stripeSource: source.id,    
+                                           listing_type: "basic5",
+                                           action: "pay_basic5"
+                                        },
+                                        beforeSend: function() {
+                                           jQuery("#payment-button").attr("disabled", true);
+                                           jQuery("#payment-button").after(\'<img id="loading_gif" src="https://www.intherooms.com/home/wp-content/uploads/2020/04/2.gif" style="width: 30px;margin-left: 25px;position: absolute;top: 5px;">\');
+                                           //jQuery("#payment_process").html(\'<div class="alert alert-info"><i class="fa fa-info-circle"></i> Please wait!</div>\');
+                                        },
+                                        complete: function() {
+                                               jQuery("#payment-button").attr("disabled",false);
+                                               jQuery("#loading_gif").remove();
+                                        },
+                                        success: function(json) {
+                                               if (json["error"]) {
+                                                   jQuery("#payment_process").html(\'<div class="alert alert-danger">\' + json["error"] + \'</div>\');
+                                                   jQuery("html, body").animate({ scrollTop: jQuery("#payment_process").offset().top }, 1000);
+                                               }
+                                               if (json["success"]) {
+                                                   window.location.replace("https://www.intherooms.com/home/successful-payment/");
+						   jQuery("#payment_process").html("");    
+                                                   jQuery("#full_payment_area").html("<p>Thank you for the payment!<br>You request for your listing to be added to our directory has been received.<br>Your listing will be reviewed within the next two business days.  Once this review process has been completed you will receive an email confirming that your listings are live and where you can see them.<br>If you have any questions please email us at contact@intherooms.com</p>");
+                                                   //jQuery("html, body").animate({ scrollTop: jQuery("#payment_process").offset().top }, 1000);
+                                               }
+                                           }
+                                    });
+                                    //form.submit();  /* Submit the form */
+                                }
+                                </script>
+                                    <script>
+                                    jQuery(function($) {
+                                        $("#exp_date").on("input",function(){
+                                            var curLength = $(this).val().length;
+                                            if(curLength === 2){
+                                               var newInput = $(this).val();
+                                                newInput +="/";
+                                                $(this).val(newInput);
+                                            }
+                                        });
+                                        $("#card_no").on("keypress change", function () {
+                                            $(this).val(function (index, value) {
+                                                    return value.replace(/\W/gi, "").replace(/(.{4})/g, "$1 ");
+                                            });
+                                        });
+                                        $("body").on("click", "#paypal_featured", function(e){
+                                            e.preventDefault();
+                                            $.ajax({
+                                                 type : "POST",
+                                                 dataType : "json",
+                                                 url : "'.admin_url( 'admin-ajax.php' ).'",
+                                                 data : {
+                                                    card_name: $("#card_name").val(),
+                                                    card_no: $("#card_no").val(),
+                                                    exp_date: $("#exp_date").val(),
+                                                    cvv: $("#cvv").val(),
+                                                    f_name: "'.$f_name.'",
+                                                    l_name: "'.$l_name.'",
+                                                    email: "'.$email.'",
+                                                    c_phone: "'.$c_phone.'",
+                                                    doc_name: "'.$doc_name.'",
+                                                    add1: "'.$add1.'",
+                                                    add2: "'.$add2.'",
+                                                    city: "'.$city.'",
+                                                    state: "'.$state.'",
+                                                    zip: "'.$zip.'",
+                                                    phone: "'.$phone.'",
+                                                    listing_type: "basic5",
+                                                    action: "pay_basic5"
+                                                 },
+                                                 beforeSend: function() {
+                                                    $("#paypal_featured").attr("disabled", true);
+                                                    $("#payment_process").html(\'<div class="alert alert-info"><i class="fa fa-info-circle"></i> Please wait!</div>\');
+                                                 },
+                                                 complete: function() {
+                                                        $("#paypal_featured").attr("disabled",false);
+                                                 },
+                                                 success: function(json) {
+                                                        if (json["error"]) {
+                                                            $("#payment_process").html(\'<div class="alert alert-danger">\' + json["error"] + \'</div>\');
+                                                            $("html, body").animate({ scrollTop: $("#payment_process").offset().top }, 1000);
+                                                        }
+                                                        if (json["success"]) {
+                                                            $("#payment_process").html("");    
+                                                            $("#full_payment_area").html("<p>Thank you for the payment!<br>You request for your listing to be added to our directory has been received.<br>Your listing will be reviewed within the next two business days.  Once this review process has been completed you will receive an email confirming that your listings are live and where you can see them.<br>If you have any questions please email us at contact@intherooms.com</p>");
+                                                            $("html, body").animate({ scrollTop: $("#payment_process").offset().top }, 1000);
+                                                        }
+                                                    }
+                                            });
+                                        });
+
+                                    });
+                                    </script>
+                                    </div></div></div></div></form>';
                             echo $thanks_html;
                             return;
-                        } else {
-                            $thanks_html = '
-                                    <div>
-                                        <p>Some error occur please try again after sometime.</p>
-                                    </div></div></div></div></div></form>';
-                            echo $thanks_html;
-                            return;
-                        }
+
+                        
                     }
                 }
 		?>
+                        
 	</div>
 	</div>
         <div class="row-my">
@@ -206,7 +434,18 @@ function form_free() {
                     <label for="state">State</label>
                     <select class="frm-cntrl <?php echo ( isset($_POST['state']) && empty($_POST['state']) )? "error": '';?>" name="state">
                         <option value="">Select</option>
-                        <option value="AL" <?php echo ( isset($_POST['state']) && $_POST['state'] =='AL' )? 'selected':'';?> >Alabama</option>
+                        <?php
+                        if(!empty($states_list))
+                        {
+                            foreach($states_list as  $key=>$value)
+                            {
+                                ?>
+                                <option value="<?=$value->state_code?>" <?php echo ( isset($_POST['state']) && $_POST['state'] ==$value->state_code )? 'selected':'';?> ><?=$value->state_name?></option>
+                                <?php
+                            }
+                        }
+                        ?>
+<!--                        <option value="AL" <?php echo ( isset($_POST['state']) && $_POST['state'] =='AL' )? 'selected':'';?> >Alabama</option>
                         <option value="AK" <?php echo ( isset($_POST['state']) && $_POST['state'] =='AK' )? 'selected':'';?> >Alaska</option>
                         <option value="AZ" <?php echo ( isset($_POST['state']) && $_POST['state'] =='AZ' )? 'selected':'';?> >Arizona</option>
                         <option value="AR" <?php echo ( isset($_POST['state']) && $_POST['state'] =='AR' )? 'selected':'';?> >Arkansas</option>
@@ -258,7 +497,7 @@ function form_free() {
                         <option value="WA" <?php echo ( isset($_POST['state']) && $_POST['state'] =='WA' )? 'selected':'';?> >Washington</option>
                         <option value="WV" <?php echo ( isset($_POST['state']) && $_POST['state'] =='WV' )? 'selected':'';?> >West Virginia</option>
                         <option value="WI" <?php echo ( isset($_POST['state']) && $_POST['state'] =='WI' )? 'selected':'';?> >Wisconsin</option>
-                        <option value="WY" <?php echo ( isset($_POST['state']) && $_POST['state'] =='WY' )? 'selected':'';?> >Wyoming</option>
+                        <option value="WY" <?php echo ( isset($_POST['state']) && $_POST['state'] =='WY' )? 'selected':'';?> >Wyoming</option>-->
                     </select>
                     <?php if( isset($_POST['state']) && empty($_POST['state']) ) { ?>
                     <span class="error">Please select state</span>
@@ -285,4 +524,5 @@ function form_free() {
 </form>
 <?php
 } //end of function form_free()
+
 
