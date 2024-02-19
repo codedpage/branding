@@ -11,7 +11,7 @@ $to = date("Y-m-d", strtotime('wednesday this week'));
 #Logedin Users
 $qry_for[1] = "Total User Logins";
 $QRY_STRING1 = "
-SELECT count(*) users  FROM `intherooms`.`user` 
+SELECT count(*) users  FROM `user` 
 WHERE date(last_login_time) >= '$from'
 AND DATE(last_login_time) <= '$to' 
 LIMIT 1
@@ -20,7 +20,7 @@ LIMIT 1
 #Newly Registered Users
 $qry_for[2] = "New Sign Ups";
 $QRY_STRING2 = "
-SELECT count(*) FROM `intherooms`.`user` 
+SELECT count(*) FROM `user` 
 where date(ctime) >= '$from'
 and DATE(ctime) <= '$to' 
 LIMIT 1
@@ -29,7 +29,7 @@ LIMIT 1
 #New Abandoned Users (30 days)
 $qry_for[3] = "Total Abandoned Users (no activity in 30+ days)";
 $QRY_STRING3 = "
-SELECT count(*) FROM `intherooms`.`user` 
+SELECT count(*) FROM `user` 
 where date(last_login_time) < '$from' - INTERVAL 30 DAY
 LIMIT 1
 ";
@@ -37,7 +37,7 @@ LIMIT 1
 #past meetings
 $qry_for[4] = "Number of Meetings";
 $QRY_STRING4= "
-SELECT COUNT(DISTINCT(meeting_id)) FROM `intherooms`.`livemeeting_attendance` 
+SELECT COUNT(DISTINCT(meeting_id)) FROM `livemeeting_attendance` 
 WHERE DATE(mtime) >= '$from'
 AND DATE(mtime) <= '$to' 
 ";
@@ -45,7 +45,7 @@ AND DATE(mtime) <= '$to'
 #attendance previous week meetings
 $qry_for[5] = "Meeting Attendance";
 $QRY_STRING5= "
-SELECT count(DISTINCT(user_id)) FROM `intherooms`.`livemeeting_attendance` 
+SELECT count(DISTINCT(user_id)) FROM `livemeeting_attendance` 
 where date(mtime) >= '$from'
 and DATE(mtime) <= '$to' 
 LIMIT 1
