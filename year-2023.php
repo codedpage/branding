@@ -12,7 +12,7 @@ echo "<br>";
 
 
 $QRY_STRING2 = "
-SELECT count(*) FROM `intherooms`.`user` 
+SELECT count(*) FROM `user` 
 where date(ctime) >= '$from'
 and DATE(ctime) <= '$to' 
 LIMIT 1
@@ -26,7 +26,7 @@ if ($result->num_rows > 0) {
 
 echo "<br>";
 $QRY_STRING4 = "
-SELECT count(DISTINCT(user_id)) FROM `intherooms`.`livemeeting_attendance` 
+SELECT count(DISTINCT(user_id)) FROM `livemeeting_attendance` 
 where date(mtime) >= '$from'
 and DATE(mtime) <= '$to' 
 LIMIT 1
