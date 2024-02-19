@@ -21,11 +21,14 @@ do_action('bunyad_pre_footer');
 	?>
 
 	<footer class="main-footer">
-
+		
 		<?php if (Bunyad::options()->footer_upper && is_active_sidebar('contentberg-footer')): ?>	
 		
 		<section class="upper-footer">
 			<div class="wrap">
+				
+				
+				
 				
 				<ul class="widgets ts-row cf">
 					<?php dynamic_sidebar('contentberg-footer'); ?>
@@ -65,6 +68,8 @@ do_action('bunyad_pre_footer');
 		</section>
 		
 		<?php endif; ?>
+	
+	
 	
 	</footer>
 	

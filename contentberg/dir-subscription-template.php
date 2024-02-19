@@ -1,107 +1,42 @@
 <?php
-/* Template Name: Dir Subscription */
-get_header();
-include('dir-submission-form-basic5.php');
-include('dir-submission-form-basic29.php');
-include('dir-submission-form-featured69.php');
+	/* Template Name: Dir Subscription */
+	get_header();
+?>
+<link rel="stylesheet" type="text/css" href="http://local.itr.com/example-styles.css">
+<script type="text/javascript" src="http://local.itr.com/jquery-2.2.4.min.js"></script>
+<script type="text/javascript" src="http://local.itr.com/jquery.multi-select.js"></script>
+<?php
 
-if ( isset($_GET['type'] ) && $_GET['type'] == 'basic' ) { 
-    form_free();
+// include('dir-submission-form-free.php');
+// include('dir-submission-form-pro.php');
+// include('dir-submission-form-gold.php');
+// include('dir-submission-form-platinum.php');
+
+if (comments_open()){
+    //comments_template();
 }
-elseif( isset($_GET['type'] ) && $_GET['type'] == 'gold' ) { 
-    form_basic();
+if(!empty($_POST['selected_option']) && $_POST['selected_option']  == 'free')
+{
+	include('dir-submission-form-free.php');	
 }
-elseif( isset($_GET['type'] ) && $_GET['type'] == 'platinum' ) {
-    form_featured();
+else if(!empty($_POST['selected_option']) && $_POST['selected_option']  == 'pro')
+{
+	include('dir-submission-form-pro.php');	
 }
-else { ?>
-<div class="all-font">
-		<div class="txt-cntr m-b">
-		<p class="p-1"><strong>List your Practice on In The Rooms</strong></p>
-		<p class="p-2">Help those seeking addiction treatment find your treatment center or medical services.</p>
-		</div>
-		<div class="box-hold">
-				<div class="container-my">
-				<div class="row-my">	
-				<div class="col-4-my m-b-2">
-					<div class="box-shdow">
-						<div class="gredient-hold box-hding">Basic</div>
-						<div class="plan-mnth"><p class="box-hding-p"><span class="mnth-value">$5</span>/month</p><a href="<?php echo get_home_url();?>/directory-subscription/?type=basic"><button class="sel-btn">SELECT</button></a></div>
-						<div class="feature-list">
-							<ul type="none" class="list-ul">
-								<li class="list-style"><span class="all-font">Address</span></li>
-								<li class="list-style"><span class="all-font">Phone number</span></li>
-								<li class="list-style text-muted"><span class="all-font">Website link</span></li>
-								<li class="list-style text-muted"><span class="all-font">Priority ranking in search results</span></li>
-								<li class="list-style text-muted"><span class="all-font">Upgraded listing size</span></li>
-								<li class="list-style text-muted"><span class="all-font">Dedicated listing page with map</span></li>
-								<li class="list-style text-muted"><span class="all-font">Description</span></li>
-								<li class="list-style text-muted"><span class="all-font">Image</span></li>
-								<li class="list-style text-muted"><span class="all-font">Star banner marker</span></li>
-								<li class="list-style text-muted"><span class="all-font">Featured article about your practice</span></li>
-								<li class="list-style text-muted"><span class="all-font">Additional placements across the website</span></li>
-								<li class="list-style text-muted"><span class="all-font">Feature in member email sends</span></li>
-								<li class="list-style text-muted"><span class="all-font">Discounts on other advertising packages</span></li>
-								
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-4-my m-b-2">
-					<div class="box-shdow">
-						<div class="gredient-hold box-hding">Gold</div>
-						<div class="plan-mnth"><p class="box-hding-p"><span class="mnth-value">$29</span>/month</p><a href="<?php echo get_home_url();?>/directory-subscription/?type=gold"><button class="sel-btn">SELECT</button></a></div>
-						<div class="feature-list">
-							<ul type="none" class="list-ul">
-								<li class="list-style"><span class="all-font">Address</span></li>
-								<li class="list-style"><span class="all-font">Phone number</span></li>
-								<li class="list-style"><span class="all-font">Website link</span></li>
-								<li class="list-style"><span class="all-font">Priority ranking in search results</span></li>
-								<li class="list-style"><span class="all-font">Upgraded listing size</span></li>
-								<li class="list-style"><span class="all-font">Dedicated listing page with map</span></li>
-								<li class="list-style text-muted"><span class="all-font">Description</span></li>
-								<li class="list-style text-muted"><span class="all-font">Image</span></li>
-								<li class="list-style text-muted"><span class="all-font">Star banner marker</span></li>
-								<li class="list-style text-muted"><span class="all-font">Featured article about your practice</span></li>
-								<li class="list-style text-muted"><span class="all-font">Additional placements across the website</span></li>
-								<li class="list-style text-muted"><span class="all-font">Feature in member email sends</span></li>
-								<li class="list-style text-muted"><span class="all-font">Discounts on other advertising packages</span></li>
-								
-							</ul>
-						</div>
-					</div>
-				</div>
-				<div class="col-4-my m-b-2">
-					<div class="box-shdow">
-						<div class="gredient-hold box-hding">Platinum</div>
-						<div class="plan-mnth">
-							<p class="hding-badge">BEST VALUE</p>
-							<p class="box-hding-p"><span class="mnth-value">$69</span>/month</p><a href="<?php echo get_home_url();?>/directory-subscription/?type=platinum"><button class="sel-btn selected-plan">SELECT</button></a></div>
-						<div class="feature-list">
-							<ul type="none" class="list-ul">
-								<li class="list-style"><span class="all-font">Address</span></li>
-								<li class="list-style"><span class="all-font">Phone number</span></li>
-								<li class="list-style"><span class="all-font">Website link</span></li>
-								<li class="list-style"><span class="all-font">Priority ranking in search results</span></li>
-								<li class="list-style"><span class="all-font">Upgraded listing size</span></li>
-								<li class="list-style"><span class="all-font">Dedicated listing page with map</span></li>
-								<li class="list-style"><span class="all-font">Description</span></li>
-								<li class="list-style"><span class="all-font">Image</span></li>
-								<li class="list-style"><span class="all-font">Star banner marker</span></li>
-								<li class="list-style"><span class="all-font">Featured article about your practice</span></li>
-								<li class="list-style"><span class="all-font">Additional placements across the website</span></li>
-								<li class="list-style"><span class="all-font">Feature in member email sends</span></li>
-								<li class="list-style"><span class="all-font">Discounts on other advertising packages</span></li>
-								
-							</ul>
-						</div>
-					</div>
-				</div>
-				</div>
-			</div>
-		</div>	
-	</div>
-<?php } ?>
+else if(!empty($_POST['selected_option']) && $_POST['selected_option']  == 'gold')
+{
+    include('dir-submission-form-gold.php');	
+}
+else if(!empty($_POST['selected_option']) && $_POST['selected_option']  == 'platinum')
+{
+    include('dir-submission-form-platinum.php');	
+}
+
+
+
+
+?>
+
 <style>
 				
 		*, ::after, ::before { box-sizing: border-box;}

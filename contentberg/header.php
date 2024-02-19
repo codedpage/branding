@@ -75,7 +75,7 @@ window.settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);var a=
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-KECQ25H5LP');
+  gtag('config', 'UA-155894624-1');
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script>
@@ -83,15 +83,21 @@ window.settings_timer=setTimeout('_vwo_code.finish()',settings_tolerance);var a=
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-E9D91QW55R');
+  gtag('config', 'UA-155894624-4');
 </script>
 <div class="targeting" style="display:none;">
 
   <img src="https://tags.w55c.net/rs?id=077a817f5bdd4647914945dfd54adf5d&t=homepage" />
 
 </div>
+<link rel="stylesheet" type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <?php
-if(!is_page( 65134 ))
+if(!is_page( 65134 ) )
 {
     ?>
 <script async src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
@@ -100,8 +106,7 @@ if(!is_page( 65134 ))
   googletag.cmd.push(function() {
     googletag.defineSlot('/21776359302/ITR_728X90_selfrecovery', [728, 90], 'div-gpt-ad-1577196453964-0').addService(googletag.pubads());
 googletag.defineSlot('/21776359302/ITR_220X220_Spotlight_donation', ['fluid'], 'div-gpt-ad-1585038521430-0').addService(googletag.pubads());
-googletag.defineSlot('/1033324/Member_Home_728x90', [728, 90], 'div-gpt-ad-1622851086580-0').addService(googletag.pubads());    
-googletag.pubads().enableSingleRequest();
+    googletag.pubads().enableSingleRequest();
     googletag.enableServices();
   });
 </script>
@@ -114,19 +119,14 @@ if(!is_page( 65134 ))
 {
     ?>
     <!-- Begin PowerAds tag -->
-        <script async src="https://powerad.ai/script.js"></script>
+    <script async src="https://powerad.ai/script.js"></script>
     <!-- End PowerAds tag -->
-	<?php
+    <?php
 }
 ?>
-	<style>
-		.navigation .menu > li > a {
-		padding: 0 15px;
-		font-size: 14px;
-		letter-spacing: 0;
-		}
-
-		.mainbreadcrumbs{
+    
+    <style type="text/css">
+	.mainbreadcrumbs{
 		display: flex;
 		align-items: left;
 		justify-content: left;
@@ -159,42 +159,39 @@ if(!is_page( 65134 ))
 	#breadcrumbs>span>span .breadcrumb_last{
 		text-transform:uppercase;
 	}
-	.navigation .menu > li > a {
-    padding: 0px 5px;
-    font-size: 13px;
-    letter-spacing: 0;
-    font-weight: 600;
-	}
-	@media(max-width:1199px){
-	.navigation .menu > li > a {
-		padding: 0px 3px;
-		font-size: 11px;
-		letter-spacing: 0;
-		font-weight: 600;
-	}
-	}
-	@media(max-width:991px){
-	.navigation .menu > li > a {
-		padding: 0px 3px;
-		font-size: 9px;
-		letter-spacing: normal;
-		font-weight: 600;
-	}
-	}
-	.navigation ul li.active ul.sub-menu{
-		visibility: visible!important;
-		opacity: 1!important;
-	}
-	</style>
-	<script type="text/javascript">
-    (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-    })(window, document, "clarity", "script", "k9vfejqzm4");
-	</script>
+        .navigation .menu > li > a {
+            padding: 0px 6px;
+            font-size: 13px;
+            letter-spacing: 0;
+            font-weight: 600;
+        }
+        @media(max-width:1199px){
+        .navigation .menu > li > a {
+            padding: 0px 3px;
+            font-size: 11px;
+            letter-spacing: 0;
+            font-weight: 600;
+        }
+        }
+        @media(max-width:991px){
+        .navigation .menu > li > a {
+            padding: 0px 3px;
+            font-size: 9px;
+            letter-spacing: normal;
+            font-weight: 600;
+        }
+        }
+        .navigation ul li.active ul.sub-menu{
+            visibility: visible!important;
+            opacity: 1!important;
+        }
+	
+</style>
 </head>
-
+<?php
+if(!is_page(97164) || true)
+{
+    ?>
 <body <?php body_class(); ?>>
 
 <?php do_action('bunyad_begin_body'); ?>
@@ -251,5 +248,7 @@ if(!is_page( 65134 ))
 	
 	<?php endif; ?>
 	
-<?php do_action('bunyad_pre_main_content'); ?>
+<?php do_action('bunyad_pre_main_content'); 
+}?>
+
 	

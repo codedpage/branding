@@ -91,13 +91,15 @@
                                  if($value->pricing_name  != 'platinum')
                                  {
                                      ?>
-                              <button type="button"  class="btn signup"  id="<?=$value->pricing_name?>">Select</button>
+                              <button type="button"  class="btn signup"  id="<?=$value->pricing_name?>">Sign
+                              Up</button>
                               <?php
                                  }
                                  else
                                  {
                                      ?>
-                              <button type="button" data-toggle="modal" data-target="#myModal2" class="btn signup" id="<?=$value->pricing_name?>">Select</button>
+                              <button type="button" data-toggle="modal" data-target="#myModal2" class="btn signup" id="<?=$value->pricing_name?>">Sign
+                              Up</button>
                               <?php
                                  }
                                  ?>
@@ -128,7 +130,7 @@
                                  <td width="15%">
                                     <div class="pricing-table-item">
                                        <div class="pricing-table-item-purchase">
-                                          <h5 style="color: #000;">Free </h5>
+                                          <h5 style="color: #000;">Fre </h5>
                                        </div>
                                     </div>
                                  </td>

@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-global $wpdb;
+    global $wpdb;
     $states_list  =  $wpdb->get_results("SELECT * FROM {$wpdb->prefix}state where status = 1",OBJECT);
 
 	if (isset($_POST['doc_name'])) { 
@@ -53,73 +53,70 @@ global $wpdb;
                         }
                     }
                     if(count($reg_errors->errors) == 0) {
-                        //write code to save info of form into DB
-                        global $wpdb;
-                        $table_name ='wp_dir_subscription';
-                        $success = $wpdb->insert($table_name, array(
-                            'treat_center' => $doc_name,
-                            'add1' => $add1,
-                            'add2' => $add2,
-                            'city' => $city,
-                            'state' => $state,
-                            'zip'   => $zip,
-                            'phone' => $phone,
-                            'c_f_name' => $f_name,
-                            'c_l_name' => $l_name,
-                            'c_email'  => $email,
-                            'c_phone'  => $c_phone,
-                            'listing_type'  => 'free',
-                       ));
-                        if($success) {
-                            /* code for hubsport to send email */
-                            $ip_addr         = $_SERVER['REMOTE_ADDR']; //IP address too.
-                            $hs_context      = array(
-                                    'ipAddress' => $ip_addr,
-                                    'pageUrl' => 'https://www.intherooms.com/home/directory-subscription/',
-                                    'pageName' => 'Listing Subscription Free'
-                            );
-                            $hs_context_json = json_encode($hs_context);
-
-                            $str_post = "email=" .urlencode($email)
-                                    . "&firstname=" . urlencode($f_name)
-                                    . "&lastname=" . urlencode($l_name)
-                                    . "&zip_code=" . urlencode($zip)
-                                    . "&phone=" . urlencode($phone)
-                                    . "&treatment_center_or_doctor_name=" . urlencode($doc_name)
-                                    . "&hs_context=" . urlencode($hs_context_json); //Leave this one be
-                            $endpoint = 'https://forms.hubspot.com/uploads/form/v2/573688/ebb99a76-f4be-4fa6-b023-8bd6a9b14162';
-
-                            $ch = @curl_init();
-                            @curl_setopt($ch, CURLOPT_POST, true);
-                            @curl_setopt($ch, CURLOPT_POSTFIELDS, $str_post);
-                            @curl_setopt($ch, CURLOPT_URL, $endpoint);
-                            @curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                                    'Content-Type: application/x-www-form-urlencoded'
-                            ));
-                            @curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                            //$response    = @curl_exec($ch); //Log the response from HubSpot as needed.
-                            $status_code = @curl_getinfo($ch, CURLINFO_HTTP_CODE); //Log the response status code
-                            //print curl_error($ch);
-                            @curl_close($ch);
-                            /* Hubspot code end here */
-                            $thanks_html = '
-                                    <div>
-                                        <p>Thank you!<br>You request for your listing to be added to our directory has been received.<br>Check your email for a message about the next steps.<br>Your listing will be reviewed within the next two business days.  Once this review process has been completed you will receive an email confirming that your listings are live and where you can see them.<br>If you have any questions please email us at contact@intherooms.com</p>
-                                    </div></div></div></div></div></form>';
+                        $json_ecode = json_encode($_POST);
+                        echo $json_ecode;
+                        $thanks_html = '
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Contributor Contact Details</h3>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>First Name:&nbsp;&nbsp;<b>'.$f_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Last Name:&nbsp;&nbsp;<b>'.$l_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Email:&nbsp;&nbsp;<b>'.$email.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Phone:&nbsp;&nbsp;<b>'.$c_phone.'</b></p>
+                                    </div>
+                                    <div class="col-12-my">
+                                        <h3 class="sub-hding">Listing Information</h3>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Treatment Center or Doctor Name:&nbsp;&nbsp;<b>'.$doc_name.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Phone Number:&nbsp;&nbsp;<b>'.$phone.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Address Line 1:&nbsp;&nbsp;<b>'.$add1.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Address Line 2:&nbsp;&nbsp;<b>'.$add2.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>City:&nbsp;&nbsp;<b>'.$city.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>State:&nbsp;&nbsp;<b>'.$state.'</b></p>
+                                    </div>
+                                    <div class="col-6-my">
+                                        <p>Zip Code:&nbsp;&nbsp;<b>'.$zip.'</b></p>
+                                    </div>
+                                        <div class="col-12-my">&nbsp;</div>
+                                        <div class="col-12-my">
+                                            <div class="form-row">
+                                                <div class="form-group col-6-my">
+                                                    <input type="hidden" id="free_subscription " name="free_subscription" value="true">
+                                                    <button id="payment-button" class="btn btn-info">Subscribe</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </div>	
+                                    </div><!-- full_payment_area end here -->
+                                    
+                        
+                                    </div></div></div></div></form>';
                             echo $thanks_html;
                             return;
-                        } else {
-                            $thanks_html = '
-                                    <div>
-                                        <p>Some error occur please try again after sometime.</p>
-                                    </div></div></div></div></div></form>';
-                            echo $thanks_html;
-                            return;
-                        }
+                        
                     }
                 }
 		?>
-
+                        
 	</div>
 	</div>
         <div class="row-my">
@@ -238,12 +235,10 @@ global $wpdb;
 	</div>
 	<div class="row-my">
             <div class="col-12-my m-10">
-            <input type="hidden" id="selected_option" name="selected_option" value="free">
-            <button class="proceed-btn">Submit</button>
+                <input type="hidden" id="selected_option" name="selected_option" value="free">
+                <button class="proceed-btn">Submit</button>
             </div>
 	</div>
     </div>
 </div>
 </form>
-
-
