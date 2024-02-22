@@ -52,6 +52,7 @@ LIMIT 1
 ";
 
 
+
 //Generate the sql script 
 for ($i = 1; $i <= 5; $i++)
 {
@@ -61,6 +62,8 @@ for ($i = 1; $i <= 5; $i++)
 }
 
 exit;
+
+echo "Duration : $from - $to <br><br>";
 include("dbc.php");
 for ($i = 1; $i <= 5; $i++)
 {
