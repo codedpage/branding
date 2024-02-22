@@ -1,58 +1,35 @@
-<?php
+<?php 
 include("dbc.php");
-//error_reporting(0);
+
+function nb($date) {
+   
+    $datetime = new DateTime($date);
+    $datetime->modify('+1 days');
+    return $datetime->format('Y-m-d');
+}
+
  
-// Set the year and month
-$year = 2024;
-$month = 1; // January
-
-// Get the total number of days in January 2024
-$total_days_in_month = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-
-// Initialize an array to store week numbers and their corresponding first and last dates
-$weeks = array();
-
-// Loop through each day of January 2024
-for ($day = 1; $day <= $total_days_in_month; $day++) {
-    // Get the timestamp for the current day
-    $current_day_timestamp = strtotime("$year-$month-$day");
-
-    // Get the week number for the current day
-    $week_number = date('W', $current_day_timestamp);
-
-    // Get the day of the week (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
-    $day_of_week = date('w', $current_day_timestamp);
-
-    // If it's the first day of the week, set it as the first date of the week
-    if ($day_of_week == 1) {
-        $weeks[$week_number]['first_date'] = date('Y-m-d', $current_day_timestamp);
-    }
-
-    // If it's the last day of the week, set it as the last date of the week
-    if ($day_of_week == 0 || $day == $total_days_in_month) {
-        $weeks[$week_number]['last_date'] = date('Y-m-d', $current_day_timestamp);
-    }
+function we($date) {
+   
+    $datetime = new DateTime($date);
+    $datetime->modify('+6 days');
+    return $datetime->format('Y-m-d');
 }
 
 
+$base = '2024-01-25';
 
-
-// Count the total number of weeks in January 2024
-$total_weeks = count($weeks);
-
-// Output the total number of weeks and their corresponding first and last dates
-echo "Total number of weeks in January 2024: $total_weeks<br><br>";
-foreach ($weeks as $week_number => $dates) {
-    echo "Week $week_number: <br>";
-    echo "First date: {$dates['first_date']}<br>";
-    echo "Last date: {$dates['last_date']}<br>";
-
- 
-$from = $dates['first_date'];
-$to = $dates['last_date'];
+for ($i = 1; $i <= 1; $i++) {
     
+  $from = $base;
+  $to = we($base);
+  $base = nb($to);
 
- 
+
+echo "First date: $from<br>";
+echo "Last date: $to<br>";
+
+
 $QRY_STRING2 = "
 SELECT COUNT(*) AS total_count
 FROM (
@@ -97,12 +74,11 @@ sleep(1);
 echo "<br> <br>";
 
 
-
 }
 
 //monthly qry
-$from1 = date('Y-m-01', strtotime("$year-$month-01")); 
-$to1 = date('Y-m-t', strtotime("$year-$month-01"));
+$from1 = '2024-01-25';
+$to1 = '2024-02-21';
 
 echo $from1 . " - " . $to1 . "<br>";
 
@@ -127,4 +103,3 @@ if ($result->num_rows > 0) {
 
 
 $mysqli->close();
- 
